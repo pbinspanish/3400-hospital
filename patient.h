@@ -16,9 +16,11 @@ class Patient {
         time_t P_dischargeDate;
 
 public:
-    Patient(int id, string& fn, string& ln, string& phone, string& disease, string& treatment) : P_id(id), P_fname(fn), P_lname(ln), P_phoneNumber(phone), P_disease(disease), P_treatment(treatment) {}
-
+    Patient(int id, string& fn, string& ln, string& phone, string& disease, string& treatment);
+    
     void save(Database& db) const;
 
-    void getPatient(Database& db, int id);
-}
+    static Patient getPatient(Database& db, int id);
+
+    int getId() const;
+};
