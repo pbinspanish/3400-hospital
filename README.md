@@ -3,5 +3,5 @@
 | Name          |         Contribution          |
 | ------------- | ----------------------------- |
 | Hadiyah Arif  | Pharmacy & Nurse Code         |
-| Josiah Henson | Doctor & Patient Code         |
-| Faria Islam   | Hospital Code & SQL Database  |
+| Josiah Henson | Hospital Code & SQL Database  |
+| Faria Islam   | Doctor & Patient Code         |
