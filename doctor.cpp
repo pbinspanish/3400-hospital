@@ -1,11 +1,5 @@
 #include "doctor.h"
 
-class Doctor { 
-    private: 
-        int D_id;
-        string D_name;
-
-public:
     Doctor(int id, string& name) : D_id(id), D_name(name) {}
 
     void save(Database& db) const {
