@@ -1,0 +1,89 @@
+#include "doctor.h"
+
+class Doctor { 
+    private: 
+        int D_id;
+        string D_name;
+
+public:
+    Doctor(int id, string& name) : D_id(id), D_name(name) {}
+
+    void save(Database& db) const {
+        string sql = "INSERT INTO doctors (D_id, D_name) VALUES ('" + to_string(D_id) + "', '" + D_name + "');";
+        db.executeSQL(sql);
+    }
+
+    void Doctor::requestOrder(Database& db, const string& prescription) {
+        string sql = "INSERT INTO drugs (name, pharmacyID) VALUES ('" + prescription + "', 1);";
+        db.executeSQL(sql);
+    }
+    
+    void primary(Database& db, Patient& patient) const {
+        string sql = "UPDATE patients SET primary_doc = " + to_string(D_id) + " WHERE patientID = " + to_string(patient.getPatient()) + ";";
+        db.executeSQL(sql);
+    }
+
+    void Doctor::attend(Database& db, Patient& patient) {
+        string sql = "INSERT INTO doctor_patient (doctorID, patientID) VALUES (" + to_string(D_id) + ", " + to_string(patient.getPatient()) + ";";
+        db.executeSQL(sql);
+    }    
+
+    void discharge(Database& db, Patient& patient) const {
+        string sql = "UPDATE patients SET dischargeDate = datetime('now') WHERE patientID = " + to_string(patient.getPatient()) + ";";
+        db.executeSQL(sql);
+    }
+
+    void doctorMenu(Database& db, Doctor& doctor) {
+        int input;
+    
+        do {
+            cout << "Welcome, Doctor!\n";
+            cout << "1. Request Pharmacy Order\n";
+            cout << "2. Become a Primary Doctor\n";
+            cout << "3. Attend a Patient\n";
+            cout << "4. Discharge a Patient\n";
+            cout << "5. Exit\n";
+            cout << "Enter: ";
+            cin >> input;
+    
+            switch (input) {
+                case 1: {
+                    string prescription;
+                    cout << "Enter prescription request: ";
+                    cin.ignore();
+                    getline(cin, prescription);
+                    doctor.requestOrder(db, prescription);
+                    break;
+                }
+                case 2: {
+                    int P_id;
+                    cout << "Enter the patient's ID to become their Primary Doctor: ";
+                    cin >> P_id;
+                    Patient::getPatient(db, P_id);
+                    doctor.primary(db, P_id);
+                    break;
+                }
+                case 3: {
+                    int P_id;
+                    cout << "Enter the patient's ID to attend to them: ";
+                    cin >> patientID;
+                    Patient::getPatient(db, P_id);
+                    doctor.attend(db, P_id);
+                    break;
+                }
+                case 4: {
+                    int P_id;
+                    cout << "Enter the patient's ID to discharge them: ";
+                    cin >> patientID;
+                    doctor.discharge(db, P_id);
+                    break;
+                }
+                case 5:
+                    cout << "Exiting\n";
+                    break;
+                default:
+                    cout << "Please try again.\n";
+            }
+        } while (input != 5);
+    }
+}
