@@ -1,8 +1,8 @@
 #include "doctor.h"
 
-    Doctor(int id, string& name) : D_id(id), D_name(name) {}
+    Doctor(int id, const string& name) : D_id(id), D_name(name) {}
 
-    void save(Database& db) const {
+    void Doctor::save(Database& db) const {
         string sql = "INSERT INTO doctors (D_id, D_name) VALUES ('" + to_string(D_id) + "', '" + D_name + "');";
         db.executeSQL(sql);
     }
@@ -12,8 +12,8 @@
         db.executeSQL(sql);
     }
     
-    void primary(Database& db, Patient& patient) const {
-        string sql = "UPDATE patients SET primary_doc = " + to_string(D_id) + " WHERE patientID = " + to_string(patient.getPatient()) + ";";
+    void Doctor::primary(Database& db, Patient& patient) const {
+        string sql = "UPDATE patients SET primary_doc = " + to_string(D_id) + " WHERE P_id = " + to_string(patient.getId()) + ";";
         db.executeSQL(sql);
     }
 
@@ -22,16 +22,16 @@
         db.executeSQL(sql);
     }    
 
-    void discharge(Database& db, Patient& patient) const {
-        string sql = "UPDATE patients SET dischargeDate = datetime('now') WHERE patientID = " + to_string(patient.getPatient()) + ";";
+    void Doctor::discharge(Database& db, Patient& patient) const {
+        string sql = "UPDATE patients SET dischargeDate = datetime('now') WHERE P_id = " + to_string(patient.getId()) + ";";
         db.executeSQL(sql);
     }
 
-    void doctorMenu(Database& db, Doctor& doctor) {
+    void Doctor::doctorMenu(Database& db) {
         int input;
     
         do {
-            cout << "Welcome, Doctor!\n";
+            cout << "\n Welcome, Doctor! \n";
             cout << "1. Request Pharmacy Order\n";
             cout << "2. Become a Primary Doctor\n";
             cout << "3. Attend a Patient\n";
@@ -53,23 +53,24 @@
                     int P_id;
                     cout << "Enter the patient's ID to become their Primary Doctor: ";
                     cin >> P_id;
-                    Patient::getPatient(db, P_id);
-                    doctor.primary(db, P_id);
+                    Patient patient = Patient::getPatient(db, P_id);
+                    primary(db, patient);
                     break;
                 }
                 case 3: {
                     int P_id;
-                    cout << "Enter the patient's ID to attend to them: ";
-                    cin >> patientID;
-                    Patient::getPatient(db, P_id);
-                    doctor.attend(db, P_id);
+                    cout << "Enter the patient's ID to attend: ";
+                    cin >> P_id;
+                    Patient patient = Patient::getPatient(db, P_id);
+                    attend(db, patient);
                     break;
                 }
                 case 4: {
                     int P_id;
-                    cout << "Enter the patient's ID to discharge them: ";
-                    cin >> patientID;
-                    doctor.discharge(db, P_id);
+                    cout << "Enter the patient's ID to discharge: ";
+                    cin >> P_id;
+                    Patient patient = Patient::getPatient(db, P_id);
+                    discharge(db, patient);
                     break;
                 }
                 case 5:
@@ -80,4 +81,3 @@
             }
         } while (input != 5);
     }
-}
