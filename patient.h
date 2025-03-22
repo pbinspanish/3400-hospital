@@ -22,5 +22,5 @@ public:
 
     static Patient getPatient(Database& db, int id);
 
-    int getId() const;
+    int getId() const { return P_id; }
 };
