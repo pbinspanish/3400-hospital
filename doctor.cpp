@@ -14,7 +14,7 @@
     }
     
     void Doctor::primary(Database& db, Patient& patient) const {
-        string sql = "UPDATE patients SET primary_doc = " + to_string(D_id) + " WHERE P_id = " + to_string(patient.getId()) + ";";
+        string sql = "UPDATE patients SET primary_doc = " + to_string(D_id) + " WHERE P_id = " + to_string(patient.getPatient()) + ";";
         db.executeSQL(sql);
     }
 
@@ -24,7 +24,7 @@
     }    
 
     void Doctor::discharge(Database& db, Patient& patient) const {
-        string sql = "UPDATE patients SET dischargeDate = datetime('now') WHERE P_id = " + to_string(patient.getId()) + ";";
+        string sql = "UPDATE patients SET dischargeDate = datetime('now') WHERE P_id = " + to_string(patient.getPatient()) + ";";
         db.executeSQL(sql);
     }
 
