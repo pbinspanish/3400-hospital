@@ -1,4 +1,5 @@
 #include "doctor.h"
+#include <iostream>
 
     Doctor(int id, const string& name) : D_id(id), D_name(name) {}
 
