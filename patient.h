@@ -1,6 +1,6 @@
 #include <string>
 #include <ctime>
-//#include <vector>
+#include <vector>
 #include "database.h"
 
 using namespace std;
@@ -17,7 +17,7 @@ class Patient {
         time_t P_dischargeDate;
 
 public:
-    Patient(int id, string& fn, string& ln, string& phone, string& disease, string& treatment);
+    Patient(int id, const string& fn, const string& ln, const string& phone, const string& disease, const string& treatment);
     
     void save(Database& db) const;
 
@@ -25,7 +25,7 @@ public:
 
     int getId() const { return P_id; }
 
-    //Added by H:
+    //Added by H: 
     //string getFullName() const { return P_fname + " " + P_lname; }
     //string getDisease() const { return P_disease; }
 
