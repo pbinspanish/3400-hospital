@@ -1,6 +1,6 @@
 #include "doctor.h"
 #include <iostream>
-
+    //H: Needs a 'Doctor::' prefix,right?
     Doctor(int id, const string& name) : D_id(id), D_name(name) {}
 
     void Doctor::save(Database& db) const {
