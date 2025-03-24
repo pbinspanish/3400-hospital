@@ -3,6 +3,7 @@
 
 #include <string>
 #include "hospital.h"
+#include "database.h"
 
 class Pharmacy{
     public:
