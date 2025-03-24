@@ -1,7 +1,7 @@
 #include "doctor.h"
 #include <iostream>
-    //H: Needs a 'Doctor::' prefix,right?
-    Doctor(int id, const string& name) : D_id(id), D_name(name) {}
+
+    Doctor::Doctor(int id, const string& name) : D_id(id), D_name(name) {}
 
     void Doctor::save(Database& db) const {
         string sql = "INSERT INTO doctors (D_id, D_name) VALUES ('" + to_string(D_id) + "', '" + D_name + "');";
@@ -19,7 +19,7 @@
     }
 
     void Doctor::attend(Database& db, Patient& patient) {
-        string sql = "INSERT INTO doctor_patient (doctorID, patientID) VALUES (" + to_string(D_id) + ", " + to_string(patient.getPatient()) + ";";
+        string sql = "INSERT INTO doctor_patient (doctorID, patientID) VALUES (" + to_string(D_id) + ", " + to_string(patient.getPatient()) + ");";
         db.executeSQL(sql);
     }    
 
