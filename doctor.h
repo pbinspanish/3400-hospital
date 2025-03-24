@@ -11,7 +11,7 @@ class Doctor {
         string D_name;
 
 public:
-    Doctor(int id, string& name);
+    Doctor(int id, const string& name);
 
     void save(Database& db) const;
 
