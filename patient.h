@@ -23,4 +23,9 @@ public:
     static Patient getPatient(Database& db, int id);
 
     int getId() const { return P_id; }
+
+    //Added by H:
+    //string getFullName() const { return P_fname + " " + P_lname; }
+    //string getDisease() const { return P_disease; }
+
 };
