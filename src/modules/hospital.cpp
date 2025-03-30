@@ -1,66 +1,151 @@
-// hospital.cpp
-#include "../include/hospital.h"
 #include <iostream>
 #include <sstream>
 
-Hospital::Hospital(int id, const std::string& location) : id(id), location(location) {}
+#include "hospital.h"
 
-void Hospital::readFromDatabase(SQLite::Database& db) {
-    SQLite::Statement query(db, "SELECT location FROM hospital WHERE id = ?");
-    query.bind(1, id);
+// Constructor
+Hospital::Hospital(int id, const std::string& location) : id(id), location(location) {
+    patients = std::vector<Patient>();
 
-    if (query.executeStep()) {
-        location = query.getColumn(0).getString();
-    } else {
-        std::cerr << "Hospital with ID " << id << " not found." << std::endl;
+    // write to the database
+    std::string sql = "INSERT INTO hospitals (id, location) VALUES (" + std::to_string(id) + ", '" + location + "');";
+    Database::executeSQL(sql);
+    std::cout << "Hospital " << location << " has been created with ID: " << id << std::endl;
+}
+
+
+
+// Patient Management
+void Hospital::addPatient(const Patient& patient) {
+    patients.push_back(patient);
+}
+void Hospital::removePatient(const Patient& patient) {
+    for (auto it = patients.begin(); it != patients.end(); ++it) {
+        if (it->getId() == patient.getId()) {
+            patients.erase(it);
+            break;
+        }
     }
 }
 
-void Hospital::writeToDatabase(SQLite::Database& db) {
-    if (id == 0) {
-        // Insert new hospital
-        SQLite::Statement insertQuery(db, "INSERT INTO hospital (location) VALUES (?)");
-        insertQuery.bind(1, location);
-        insertQuery.exec();
-        id = db.getLastInsertRowid(); // Retrieve the auto-generated ID
-    } else {
-        // Update existing hospital
-        SQLite::Statement updateQuery(db, "UPDATE hospital SET location = ? WHERE id = ?");
-        updateQuery.bind(1, location);
-        updateQuery.bind(2, id);
-        updateQuery.exec();
+Patient Hospital::getPatient(int patient_id) {
+    for (Patient patient : patients) {
+        if (patient.getId() == patient_id) {
+            return patient;
+        }
+    }
+
+    throw std::runtime_error("Patient not found");
+}
+
+void Hospital::relocatePatient(Patient &patient, Hospital &new_hospital)
+{
+    // Add patient to the new hospital
+    new_hospital.addPatient(patient); // TODO: make sure we don't overflow the hospital
+
+    // Remove patient from the old hospital
+    for (auto it = patients.begin(); it != patients.end(); ++it) {
+        if (it->getId() == patient.getId()) {
+            patients.erase(it);
+            break;
+        }
+    }
+
+    // Update the patient's hospital ID
+    patient.hospital_id = new_hospital.id;
+
+    // Update the database
+    std::string sql = "UPDATE patients SET admitted_to = " + std::to_string(new_hospital.id) + " WHERE id = " + std::to_string(patient.getId()) + ";";
+    Database::executeSQL(sql);
+
+    std::cout << "Patient " << patient.getFullName() << " has been relocated to " << new_hospital.location << std::endl;
+    
+}
+
+
+
+// Doctor Management
+void Hospital::addDoctor(const Doctor& doctor) {
+    doctors.push_back(doctor);
+}
+void Hospital::removeDoctor(const Doctor& doctor) {
+    for (auto it = doctors.begin(); it != doctors.end(); ++it) {
+        if (it->getId() == doctor.getId()) {
+            doctors.erase(it);
+            break;
+        }
     }
 }
 
-std::vector<Hospital> Hospital::getAllHospitals(SQLite::Database& db) {
-    std::vector<Hospital> hospitals;
-    SQLite::Statement query(db, "SELECT id, location FROM hospital");
-
-    while (query.executeStep()) {
-        int id = query.getColumn(0).getInt();
-        std::string location = query.getColumn(1).getString();
-        hospitals.emplace_back(id, location);
+Doctor Hospital::getDoctor(int doctor_id) {
+    for (Doctor doctor : doctors) {
+        if (doctor.getId() == doctor_id) {
+            return doctor;
+        }
     }
-    return hospitals;
+
+    throw std::runtime_error("Doctor not found");
 }
 
-Hospital Hospital::getHospitalById(SQLite::Database& db, int hospitalId) {
-    Hospital hospital;
-    SQLite::Statement query(db, "SELECT id, location FROM hospital WHERE id = ?");
-    query.bind(1, hospitalId);
+void Hospital::relocatedDoctor(const Doctor& doctor, const Hospital& hospital) {
+    // Add doctor to the new hospital
+    doctors.push_back(doctor); // TODO: make sure we don't overflow the hospital
 
-    if (query.executeStep()) {
-        hospital.id = query.getColumn(0).getInt();
-        hospital.location = query.getColumn(1).getString();
+    // Remove doctor from the old hospital
+    for (auto it = doctors.begin(); it != doctors.end(); ++it) {
+        if (it->getId() == doctor.getId()) {
+            doctors.erase(it);
+            break;
+        }
     }
-    return hospital;
+
+    // Update the database
+    std::string sql = "UPDATE doctors SET working_at = " + std::to_string(hospital.id) + " WHERE id = " + std::to_string(doctor.getId()) + ";";
+    Database::executeSQL(sql);
+
+    std::cout << "Doctor " << doctor.getId() << " has been relocated to " << hospital.location << std::endl;
 }
 
-bool Hospital::locationExists(SQLite::Database& db, const std::string& location){
-    SQLite::Statement query(db,"SELECT COUNT(*) FROM hospital WHERE location = ?");
-    query.bind(1,location);
-    if(query.executeStep()){
-        return query.getColumn(0).getInt() > 0;
+
+
+// Nurse Management
+void Hospital::addNurse(const Nurse& nurse) {
+    nurses.push_back(nurse);
+}
+void Hospital::removeNurse(const Nurse& nurse) {
+    for (auto it = nurses.begin(); it != nurses.end(); ++it) {
+        if (it->id == nurse.id) {
+            nurses.erase(it);
+            break;
+        }
     }
-    return false;
+}
+
+Nurse Hospital::getNurse(int nurse_id) {
+    for (Nurse nurse : nurses) {
+        if (nurse.id == nurse_id) {
+            return nurse;
+        }
+    }
+
+    throw std::runtime_error("Nurse not found");
+}
+
+void Hospital::relocateNurse(const Nurse& nurse, const Hospital& hospital) {
+    // Add nurse to the new hospital
+    nurses.push_back(nurse); // TODO: make sure we don't overflow the hospital
+
+    // Remove nurse from the old hospital
+    for (auto it = nurses.begin(); it != nurses.end(); ++it) {
+        if (it->id == nurse.id) {
+            nurses.erase(it);
+            break;
+        }
+    }
+
+    // Update the database
+    std::string sql = "UPDATE nurses SET working_at = " + std::to_string(hospital.id) + " WHERE id = " + std::to_string(nurse.id) + ";";
+    Database::executeSQL(sql);
+
+    std::cout << "Nurse " << nurse.getName() << " has been relocated to " << hospital.location << std::endl;
 }

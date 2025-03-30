@@ -4,100 +4,74 @@
 
 #include <fstream>
 #include <string>
+#include <vector>
 
 #include <SQLiteCpp/SQLiteCpp.h>
 
+#include "database.h"
+#include "hospital.h"
+
 int main ()
 {
-    try
-    {
-        // Open a database file in create/write mode
-        SQLite::Database db("hms.db3", SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
-        std::cout << "SQLite database file '" << db.getFilename().c_str() << "' opened successfully\n";
+    Database db;
+    db.createDatabase();
 
-        // read sql file in to create database
-        std::string sql;
-        std::string line;
-        std::ifstream file("../sql/create_database.sql");
-        if (file.is_open())
-        {
-            while (getline(file, line))
-            {
-                sql += line;
-            }
-            file.close();
-        }
-        else
-        {
-            std::cerr << "Unable to open file" << std::endl;
-            return EXIT_FAILURE;
-        }
+    // list of 5 hospitals
+    std::vector<Hospital> hospitals = {
+        Hospital(1, "Windsor"),
+        Hospital(2, "Essex"),
+        Hospital(3, "Tecumseh"),
+        Hospital(4, "LaSalle"),
+        Hospital(5, "Amherstburg")
+    };
 
-        // Execute SQL query without results
-        db.exec(sql.c_str());
+    // list of 20 pharmacies
+    // std::vector<Pharmacy> pharmacies = {
+    //     Pharmacy("Pharmacy A"),
+    //     Pharmacy("Pharmacy B"),
+    //     Pharmacy("Pharmacy C"),
+    //     Pharmacy("Pharmacy D"),
+    //     Pharmacy("Pharmacy E"),
+    //     Pharmacy("Pharmacy F"),
+    //     Pharmacy("Pharmacy G"),
+    //     Pharmacy("Pharmacy H"),
+    //     Pharmacy("Pharmacy I"),
+    //     Pharmacy("Pharmacy J"),
+    //     Pharmacy("Pharmacy K"),
+    //     Pharmacy("Pharmacy L"),
+    //     Pharmacy("Pharmacy M"),
+    //     Pharmacy("Pharmacy N"),
+    //     Pharmacy("Pharmacy O"),
+    //     Pharmacy("Pharmacy P"),
+    //     Pharmacy("Pharmacy Q"),
+    //     Pharmacy("Pharmacy R"),
+    //     Pharmacy("Pharmacy S"),
+    //     Pharmacy("Pharmacy T")
+    // };
+    
 
-        // read sql file to insert test data
-        sql = "";
-        file.open("../sql/test_data.sql");
-        if (file.is_open())
-        {
-            while (getline(file, line))
-            {
-                sql += line;
-            }
-            file.close();
-        }
-        else
-        {
-            std::cerr << "Unable to open file" << std::endl;
-            return EXIT_FAILURE;
-        }
-        
-        std::cout << sql << std::endl;
-        // Execute SQL query without results
-        db.exec(sql);
 
-        SQLite::Statement query(db, "SELECT * FROM hospital");
-        std::cout << "SELECT * FROM hospital :\n";
-        while (query.executeStep())
-        {
-            std::cout << "row (" << query.getColumn(0) << ", \"" << query.getColumn(1) << "\")\n";
-        }
+    // create a patient and add it
+    Patient patient(1, "John", "Doe", "1234567890", "Flu", "Rest and hydration");
+    // test
+    hospitals[0].addPatient(patient);
 
-        // // Create a new table with an explicit "id" column aliasing the underlying rowid
-        // db.exec("DROP TABLE IF EXISTS test");
-        // db.exec("CREATE TABLE test (id INTEGER PRIMARY KEY, value TEXT)");
+    hospitals[0].relocatePatient(patient, hospitals[1]);
 
-        // // first row
-        // int nb = db.exec("INSERT INTO test VALUES (NULL, \"test\")");
-        // std::cout << "INSERT INTO test VALUES (NULL, \"test\")\", returned " << nb << std::endl;
-
-        // // second row
-        // nb = db.exec("INSERT INTO test VALUES (NULL, \"second\")");
-        // std::cout << "INSERT INTO test VALUES (NULL, \"second\")\", returned " << nb << std::endl;
-
-        // // update the second row
-        // nb = db.exec("UPDATE test SET value=\"second-updated\" WHERE id='2'");
-        // std::cout << "UPDATE test SET value=\"second-updated\" WHERE id='2', returned " << nb << std::endl;
-
-        // // Check the results : expect two row of result
-        // SQLite::Statement   query(db, "SELECT * FROM test");
-        // std::cout << "SELECT * FROM test :\n";
-        // while (query.executeStep())
-        // {
-        //     std::cout << "row (" << query.getColumn(0) << ", \"" << query.getColumn(1) << "\")\n";
-        // }
-
-        // db.exec("DROP TABLE test");
+    // print out the names of all patients in hospital 1
+    std::cout << "Patients in hospital 1:" << std::endl;
+    for (const auto& p : hospitals[0].patients) {
+        std::cout << p.getFullName() << std::endl;
     }
-    catch (std::exception& e)
-    {
-        std::cout << "SQLite exception: " << e.what() << std::endl;
-        return EXIT_FAILURE; // unexpected error : exit the example program
+    // print out the names of all patients in hospital 2
+    std::cout << "Patients in hospital 2:" << std::endl;
+    for (const auto& p : hospitals[1].patients) {
+        std::cout << p.getId() << std::endl;
     }
-    remove("test.db3");
 
-    std::cout << "everything ok, quitting\n";
+    Patient test = hospitals[1].getPatient(1);
+    std::cout << "Patient ID: " << test.getId() << std::endl;
 
-    return EXIT_SUCCESS;
+
+    remove("hms.db3");
 }

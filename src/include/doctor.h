@@ -1,3 +1,6 @@
+#ifndef DOCTOR_H
+#define DOCTOR_H
+
 #include <string>
 #include <ctime>
 #include "database.h"
@@ -13,6 +16,8 @@ class Doctor {
 public:
     Doctor(int id, const string& name);
 
+    int getId() const { return D_id; }
+    string getName() const { return D_name; }
     void save(Database& db) const;
 
     void requestOrder(Database& db, const string& prescription);
@@ -25,3 +30,5 @@ public:
 
     void doctorMenu(Database& db);
 };
+
+#endif

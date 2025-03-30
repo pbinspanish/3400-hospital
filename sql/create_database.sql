@@ -4,9 +4,9 @@ DROP TABLE IF EXISTS doctors_treating;
 DROP TABLE IF EXISTS patients;
 DROP TABLE IF EXISTS doctors;
 DROP TABLE IF EXISTS pharmacies;
-DROP TABLE IF EXISTS hospital;
+DROP TABLE IF EXISTS hospitals;
 
-CREATE TABLE hospital (
+CREATE TABLE hospitals (
     id INTEGER PRIMARY KEY,
     location VARCHAR
 );
@@ -18,8 +18,9 @@ CREATE TABLE pharmacies (
 
 CREATE TABLE doctors (
     id INTEGER PRIMARY KEY,
+    name VARCHAR,
     working_at INTEGER NOT NULL,
-    FOREIGN KEY (working_at) REFERENCES hospital(id)
+    FOREIGN KEY (working_at) REFERENCES hospitals(id)
 );
 
 CREATE TABLE patients (
@@ -29,11 +30,11 @@ CREATE TABLE patients (
     phone_number VARCHAR,
     disease VARCHAR,
     treatment VARCHAR,
-    admission_date DATE NOT NULL,
+    admission_date DATE,
     discharge_date DATE,
-    admitted_to INTEGER NOT NULL,
-    primary_doctor INTEGER NOT NULL,
-    FOREIGN KEY (admitted_to) REFERENCES hospital(id),
+    admitted_to INTEGER,
+    primary_doctor INTEGER,
+    FOREIGN KEY (admitted_to) REFERENCES hospitals(id),
     FOREIGN KEY (primary_doctor) REFERENCES doctors(id)
 );
 
@@ -48,7 +49,7 @@ CREATE TABLE doctors_treating (
 CREATE TABLE nurses (
     id INTEGER PRIMARY KEY,
     working_at INTEGER NOT NULL,
-    FOREIGN KEY (working_at) REFERENCES hospital(id)
+    FOREIGN KEY (working_at) REFERENCES hospitals(id)
 );
 
 CREATE TABLE nurses_treating (

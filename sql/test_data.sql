@@ -1,5 +1,5 @@
 -- Hospitals
-INSERT INTO hospital (location) VALUES
+INSERT INTO hospitals (location) VALUES
 ('City General Hospital'),
 ('County Medical Center'),
 ('State University Hospital'),

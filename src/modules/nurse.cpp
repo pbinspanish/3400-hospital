@@ -32,7 +32,3 @@ void Nurse::listPatients() const {
         }
     }
 }
-
-std::string Nurse::getName() const {
-    return name;
-}

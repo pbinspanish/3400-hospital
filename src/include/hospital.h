@@ -1,4 +1,3 @@
-// hospital.h
 #ifndef HOSPITAL_H
 #define HOSPITAL_H
 
@@ -6,21 +5,58 @@
 #include <vector>
 #include <SQLiteCpp/SQLiteCpp.h>
 
-class Hospital {
+#include "database.h"
+#include "patient.h"
+#include "doctor.h"
+#include "nurse.h"
+
+class Hospital
+{
 public:
     int id;
     std::string location;
 
+    // list of 20 admitted patients
+    std::vector<Patient> patients;
+
+    // min 3
+    std::vector<Doctor> doctors;
+    
+    // min 5
+    std::vector<Nurse> nurses;
+
+    // Constructor
     Hospital(int id = 0, const std::string& location = "");
 
-    void readFromDatabase(SQLite::Database& db);
-    void writeToDatabase(SQLite::Database& db);
+    
+    
+    // Patient Management
+    void addPatient(const Patient& patient);
+    void removePatient(const Patient& patient);
 
-    static std::vector<Hospital> getAllHospitals(SQLite::Database& db);
-    static Hospital getHospitalById(SQLite::Database& db, int hospitalId);
+    Patient getPatient(int id);
 
-    static bool locationExists(SQLite::Database& db, const std::string& location);
+    void relocatePatient(Patient& patient, Hospital& new_hospital);
 
+
+
+    // Doctor Management
+    void addDoctor(const Doctor& doctor);
+    void removeDoctor(const Doctor& doctor);
+
+    Doctor getDoctor(int id);
+
+    void relocatedDoctor(const Doctor& doctor, const Hospital& hospital);
+
+
+
+    // Nurse Management
+    void addNurse(const Nurse& nurse);
+    void removeNurse(const Nurse& nurse);
+
+    Nurse getNurse(int id);
+
+    void relocateNurse(const Nurse& nurse, const Hospital& hospital);
 };
 
 #endif // HOSPITAL_H

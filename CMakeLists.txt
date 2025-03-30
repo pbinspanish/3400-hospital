@@ -13,7 +13,16 @@ set(SQLITECPP_RUN_CPPLINT OFF CACHE BOOL "" FORCE)
 add_subdirectory(SQLiteCpp)
 
 # Add main.cpp example source code to the executable
-add_executable(hms src/main.cpp)
+add_executable(hms
+	src/main.cpp
+	src/modules/database.cpp
+	src/modules/hospital.cpp
+	src/modules/patient.cpp
+	src/modules/doctor.cpp
+	src/modules/nurse.cpp
+	src/modules/pharmacy.cpp
+)
+target_include_directories(hms PUBLIC src/include)
 
 # Link hms1 with SQLiteCpp
 target_link_libraries(hms SQLiteCpp)
