@@ -69,11 +69,21 @@ int main() {
     return 0;
 }
 void doctorMenu() {
-    std::string doctorName;
-    std::cout << "Enter doctor name: ";
-    std::cin.ignore();
-    std::getline(std::cin, doctorName);
-    Doctor doctor(1, doctorName);
+    int doctorId;
+    while (true) {
+        doctorId = getIntInput("Enter doctor ID (1–50): ");
+        
+        std::string sql = "SELECT id FROM doctors WHERE id = " + std::to_string(doctorId) + ";";
+        auto result = db.executeQuery(sql);  // run the query right here
+    
+        if (!result.empty()) {
+            break; // ID found in database
+        } else {
+            std::cout << "✖️ Doctor ID not found. Please try again.\n";
+        }
+    }
+    Doctor doctor(doctorId, "");
+    
     int choice;
     do {
         std::cout << "\n👨‍⚕️ Doctor Menu:\n";
