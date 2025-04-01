@@ -12,7 +12,7 @@ void Database::createDatabase()
 		// read sql file in to create database
 		std::string sql;
 		std::string line;
-		std::ifstream file("../sql/create_database.sql");
+		std::ifstream file("sql/create_database.sql");
 		if (file.is_open())
 		{
 			while (getline(file, line))
@@ -45,7 +45,7 @@ void Database::insertTestData()
 		// read sql file to insert test data
 		std::string sql;
 		std::string line;
-		std::ifstream file("../sql/test_data.sql");
+		std::ifstream file("sql/test_data.sql");
 		if (file.is_open())
 		{
 			while (getline(file, line))
