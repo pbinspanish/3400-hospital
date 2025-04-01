@@ -1,37 +1,52 @@
 #include "doctor.h"
 #include <iostream>
 
-Doctor::Doctor(int id, const string &name) : D_id(id), D_name(name) {}
+Doctor::Doctor(int id, const std::string &name) : D_id(id), D_name(name) {}
 
-void Doctor::save(Database &db) const
-{
-    string sql = "INSERT INTO doctors (D_id, D_name) VALUES ('" + to_string(D_id) + "', '" + D_name + "');";
+void Doctor::save(Database &db, int hospital_id) const {
+    std::string sql = "INSERT INTO doctors (id, name, working_at) VALUES (" +
+                      std::to_string(D_id) + ", '" + D_name + "', " + std::to_string(hospital_id) + ");";
     db.executeSQL(sql);
 }
 
-void Doctor::requestOrder(Database &db, const string &prescription)
-{
-    string sql = "INSERT INTO drugs (name, pharmacyID) VALUES ('" + prescription + "', 1);";
+void Doctor::requestOrder(Database& db, const std::string& prescription) {
+    std::string sql = "INSERT INTO prescription_requests (hospital_id, pharmacy_name, drug_name) "
+                      "VALUES (1, 'City Pharmacy', '" + prescription + "');";
+    db.executeSQL(sql);
+    std::cout << "✅ Prescription for '" << prescription << "' sent to City Pharmacy.\n";
+}
+
+
+void Doctor::primary(Database &db, Patient &patient) const {
+    std::string sql = "UPDATE patients SET primary_doctor = " +
+                      std::to_string(D_id) + " WHERE id = " +
+                      std::to_string(patient.getId()) + ";";
     db.executeSQL(sql);
 }
 
-void Doctor::primary(Database &db, Patient &patient) const
-{
-    string sql = "UPDATE patients SET primary_doc = " + to_string(D_id) + " WHERE P_id = " + std::to_string(patient.getId()) + ";";
+void Doctor::attend(Database &db, Patient &patient) {
+    std::string checkSql = "SELECT * FROM doctors_treating WHERE doctor_id = " + std::to_string(D_id) +
+                           " AND patient_id = " + std::to_string(patient.getId()) + ";";
+    auto result = db.executeQuery(checkSql);
+
+    if (!result.empty()) {
+        std::cout << "⚠️ Doctor is already attending this patient.\n";
+        return;
+    }
+
+    std::string sql = "INSERT INTO doctors_treating (doctor_id, patient_id) VALUES (" +
+                      std::to_string(D_id) + ", " + std::to_string(patient.getId()) + ");";
+    db.executeSQL(sql);
+    std::cout << "✅ Doctor is now attending Patient " << patient.getId() << "\n";
+}
+
+
+void Doctor::discharge(Database &db, Patient &patient) const {
+    std::string sql = "UPDATE patients SET discharge_date = datetime('now') WHERE id = " +
+                      std::to_string(patient.getId()) + ";";
     db.executeSQL(sql);
 }
 
-void Doctor::attend(Database &db, Patient &patient)
-{
-    string sql = "INSERT INTO doctor_treating (doctorID, patientID) VALUES (" + to_string(D_id) + ", " + std::to_string(patient.getId()) + ");";
-    db.executeSQL(sql);
-}
-
-void Doctor::discharge(Database &db, Patient &patient) const
-{
-    string sql = "UPDATE patients SET dischargeDate = datetime('now') WHERE P_id = " + std::to_string(patient.getId()) + ";";
-    db.executeSQL(sql);
-}
 
 void Doctor::doctorMenu(Database &db)
 {
