@@ -71,7 +71,7 @@ int main() {
 void doctorMenu() {
     int doctorId;
     while (true) {
-        doctorId = getIntInput("Enter doctor ID (1–5): ");
+        doctorId = getIntInput("Enter doctor ID: ");
         
         std::string sql = "SELECT id FROM doctors WHERE id = " + std::to_string(doctorId) + ";";
         auto result = db.executeQuery(sql);  // run the query right here
