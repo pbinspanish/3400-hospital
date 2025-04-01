@@ -17,8 +17,10 @@ public:
     Doctor(int id, const string& name);
 
     int getId() const { return D_id; }
+
     string getName() const { return D_name; }
-    void save(Database& db) const;
+
+    void save(Database& db, int hospital_id) const;
 
     void requestOrder(Database& db, const string& prescription);
     
