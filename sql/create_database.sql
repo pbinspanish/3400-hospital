@@ -81,8 +81,8 @@ CREATE TABLE nurses_treating (
 CREATE TABLE IF NOT EXISTS prescription_requests (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     hospital_id INTEGER,
-    pharmacy_name TEXT,
-    drug_name TEXT,
+    pharmacy_name VARCHAR,
+    drug_name VARCHAR,
     status TEXT DEFAULT 'pending',
     request_date DATETIME DEFAULT CURRENT_TIMESTAMP
 );
