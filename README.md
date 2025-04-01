@@ -9,5 +9,10 @@
 To run in codespace:
 g++ src/mainmenu.cpp src/modules/*.cpp SQLiteCpp/src/*.cpp -o hospitalSystem -I SQLiteCpp/include -I src/include -lsqlite3
 
+if that doesnt work, try
+
+g++ src/mainmenu.cpp src/modules/*.cpp SQLiteCpp/src/*.cpp -o hospitalSystem -I SQLiteCpp/include -I src/include -lsqlite3
+
+
 Presentation Slides:
 Coming Soon!
