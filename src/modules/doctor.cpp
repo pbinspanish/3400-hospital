@@ -45,6 +45,7 @@ void Doctor::discharge(Database &db, Patient &patient) const {
     std::string sql = "UPDATE patients SET discharge_date = datetime('now') WHERE id = " +
                       std::to_string(patient.getId()) + ";";
     db.executeSQL(sql);
+    std::cout << "✅ Doctor has dischaged Patient " << patient.getId() << "\n";
 }
 
 
