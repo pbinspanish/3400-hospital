@@ -40,14 +40,17 @@ void Doctor::attend(Database &db, Patient &patient) {
     std::cout << "✅ Doctor is now attending Patient " << patient.getId() << "\n";
 }
 
-
 void Doctor::discharge(Database &db, Patient &patient) const {
     std::string sql = "UPDATE patients SET discharge_date = datetime('now') WHERE id = " +
                       std::to_string(patient.getId()) + ";";
     db.executeSQL(sql);
-    std::cout << "✅ Doctor has dischaged Patient " << patient.getId() << "\n";
-}
 
+    std::string deleteSql = "DELETE FROM doctors_treating WHERE patient_id = " +
+                            std::to_string(patient.getId()) + ";";
+    db.executeSQL(deleteSql);
+
+    std::cout << "✅ Doctor has discharged Patient " << patient.getId() << "\n";
+}
 
 void Doctor::doctorMenu(Database &db)
 {
