@@ -4,9 +4,9 @@
 #include <string>
 #include <ctime>
 #include <vector>
+#include "database.h"
 
-class Patient
-{
+class Patient {
 private:
     int P_id;
     std::string P_fname;
@@ -18,13 +18,14 @@ private:
     time_t P_dischargeDate;
 
 public:
-    Patient(int id, const std::string &first_name, const std::string &last_name, const std::string &phone, const std::string &disease, const std::string &treatment);
+    Patient() : P_id(0), P_fname(""), P_lname(""), P_phoneNumber(""), P_disease(""), P_treatment("") {}
 
+    Patient(int id, const std::string &first_name, const std::string &last_name,
+            const std::string &phone, const std::string &disease, const std::string &treatment);
+            
     int hospital_id;
-    // void save(Database& db) const;
-
-    // static Patient getPatient(Database& db, int id);
-
+    void save(Database& db) const;
+    static Patient getPatient(Database& db, int id);
     int getId() const { return P_id; }
     std::string getFullName() const { return P_fname + " " + P_lname; }
     std::string getFirstName() const { return P_fname; }
@@ -34,6 +35,7 @@ public:
     std::string getTreatment() const { return P_treatment; }
     time_t getAdmission() const { return P_admissionDate; }
     time_t getDischarge() const { return P_dischargeDate; }
+
 };
 
 #endif
