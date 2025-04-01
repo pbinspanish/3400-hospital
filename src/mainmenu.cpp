@@ -83,7 +83,6 @@ void doctorMenu() {
         }
     }
     Doctor doctor(doctorId, "");
-    
     int choice;
     do {
         std::cout << "\n👨‍⚕️ Doctor Menu:\n";
@@ -142,11 +141,28 @@ void doctorMenu() {
     } while (choice != 5);
 }
 void nurseMenu() {
-    std::string nurseName;
-    std::cout << "Enter nurse name: ";
-    std::cin.ignore();
-    std::getline(std::cin, nurseName);
-    Nurse nurse(nurseName);
+    // std::string nurseName;
+    // std::cout << "Enter nurse name: ";
+    // std::cin.ignore();
+    // std::getline(std::cin, nurseName);
+    // Nurse nurse(nurseName);
+
+    int nurseId;
+
+    while (true) {
+        nurseId = getIntInput("Enter nurse ID (1–5): ");
+        
+        std::string sql = "SELECT id FROM nurses WHERE id = " + std::to_string(nurseId) + ";";
+        auto result = db.executeQuery(sql);
+
+        if (!result.empty()) {
+            break; // Valid nurse ID
+        } else {
+            std::cout << "✖️ Nurse ID not found. Please try again.\n";
+        }
+    }
+    Nurse nurse("Nurse " + std::to_string(nurseId));
+    
     int choice;
     do {
         std::cout << "\n🧑‍⚕️ Nurse Menu:\n";
@@ -249,14 +265,18 @@ void adminMenu() {
         choice = getIntInput("Enter your choice: ");
 
         if (choice == 1) {
+
             std::cin.ignore();
             std::string doctorName;
             std::cout << "Enter doctor name: ";
             std::getline(std::cin, doctorName);
             int doctorId = getIntInput("Enter doctor ID: ");
+            int hospitalId = getIntInput("Enter hospital ID the doctor works at: ");
             Doctor d(doctorId, doctorName);
-            d.save(db);
+            d.save(db, hospitalId);
             std::cout << "Doctor saved.\n";
+
+
         } else if (choice == 2) {
             std::cin.ignore();
             std::string nurseName;
