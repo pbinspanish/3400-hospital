@@ -178,7 +178,8 @@ void pharmacyMenu() {
         std::cout << "\n💊 Pharmacy Menu:\n";
         std::cout << "1. Ship drugs\n";
         std::cout << "2. Bill hospital\n";
-        std::cout << "3. Back\n";
+        std::cout << "3. View Orders\n";
+        std::cout << "4. Back\n";
 
         choice = getIntInput("Enter your choice: ");
 
@@ -193,10 +194,34 @@ void pharmacyMenu() {
                 ph.billHospital(db, amount);
                 break;
             }
-            case 3: break;
+            case 3: {
+                std::string sql = "SELECT id, hospital_id, drug_name FROM prescription_requests WHERE pharmacy_name = '" + pharmacyName + "' AND status = 'pending';";
+                auto results = db.executeQuery(sql);
+            
+                if (results.empty()) {
+                    std::cout << "No pending prescriptions.\n";
+                    break;
+                }
+            
+                std::cout << "\n🧾 Pending Prescriptions:\n";
+                for (const auto& row : results) {
+                    std::cout << "Request ID: " << row[0]
+                              << " | Hospital ID: " << row[1]
+                              << " | Drug: " << row[2] << "\n";
+                }
+            
+                int requestId = getIntInput("Enter request ID to mark as shipped: ");
+            
+                std::string updateSql = "UPDATE prescription_requests SET status = 'shipped' WHERE id = " + std::to_string(requestId) + ";";
+                db.executeSQL(updateSql);
+                std::cout << "✅ Prescription shipped!\n";
+                break;
+            }
+            
+            case 4: break;
             default: std::cout << "Invalid option.\n";
         }
-    } while (choice != 3);
+    } while (choice != 4);
 }
 void adminMenu() {
     int choice;
@@ -208,7 +233,8 @@ void adminMenu() {
         std::cout << "4. View All Patients\n";
         std::cout << "5. View All Doctors\n";
         std::cout << "6. View All Nurses\n";
-        std::cout << "7. Back\n";
+        std::cout << "7. Request Prescription\n";
+        std::cout << "8. Back\n";
 
         choice = getIntInput("Enter your choice: ");
 
@@ -260,11 +286,27 @@ void adminMenu() {
         } else if (choice == 6) {
             showAllNurses();
         } else if (choice == 7) {
+            int hospitalId = getIntInput("Enter hospital ID requesting prescription: ");
+            std::string pharmacyName, drugName;
+        
+            std::cin.ignore();
+            std::cout << "Enter pharmacy name: ";
+            std::getline(std::cin, pharmacyName);
+        
+            std::cout << "Enter drug name: ";
+            std::getline(std::cin, drugName);
+        
+            std::string sql = "INSERT INTO prescription_requests (hospital_id, pharmacy_name, drug_name) VALUES (" +
+                              std::to_string(hospitalId) + ", '" + pharmacyName + "', '" + drugName + "');";
+        
+            db.executeSQL(sql);
+            std::cout << "Prescription request sent to " << pharmacyName << " for '" << drugName << "'.\n";
+        } else if (choice == 8) {
             break;
         } else {
             std::cout << "Invalid choice.\n";
         }
-    } while (choice != 7);
+    } while (choice != 8);
 }
 void patientMenu() {
     // if (db.getPatientCount() == 0) {
@@ -298,7 +340,7 @@ void showAllPatients() {
                   << " | Disease: " << row[4]
                   << " | Treatment: " << row[5] << "\n";
     }
-}//Still needs to be fixed
+}
 
 void showAllDoctors() {
     std::string sql = "SELECT id FROM doctors;";
