@@ -195,10 +195,13 @@ void nurseMenu() {
 }
 void pharmacyMenu() {
     std::string pharmacyName;
+    int pharmacyId;
+    std::cout << "Enter pharmacy id: ";
+    std::cin >> pharmacyId;
     std::cout << "Enter pharmacy name: ";
     std::cin.ignore();
     std::getline(std::cin, pharmacyName);
-    Pharmacy ph(pharmacyName);
+    Pharmacy ph(pharmacyId, pharmacyName);
     int choice;
     do {
         std::cout << "\n💊 Pharmacy Menu:\n";
@@ -211,13 +214,19 @@ void pharmacyMenu() {
 
         switch (choice) {
             case 1:
-                ph.shipDrugs(db);
+                int hospital_id;
+                std::cout << "Enter the hospital id:";
+                std::cin >> hospital_id;
+                ph.shipDrugs(db, hospital_id);
                 break;
             case 2: {
                 double amount;
                 std::cout << "Enter bill amount: ";
                 std::cin >> amount;
-                ph.billHospital(db, amount);
+                int hospital_id;
+                std::cout << "Enter the hospital id:";
+                std::cin >> hospital_id;
+                ph.billHospital(db, amount, hospital_id);
                 break;
             }
             case 3: {

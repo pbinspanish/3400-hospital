@@ -19,7 +19,7 @@ CREATE TABLE pharmacies (
 );
 
 CREATE TABLE shipments (
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     pharmacy_id INTEGER NOT NULL,
     hospital_id INTEGER NOT NULL,
     date DATE,
@@ -31,6 +31,7 @@ CREATE TABLE billing (
     id INTEGER PRIMARY KEY,
     hospital_id INTEGER NOT NULL,
     date DATE,
+    amount REAL,
     FOREIGN KEY (hospital_id) REFERENCES hospitals(id)
 );
 

@@ -8,12 +8,13 @@
 class Pharmacy
 {
 public:
+    int id;
     std::string pharmacy_name; // unique identification for the pharmacies
 
-    Pharmacy(const std::string &pharmacy_name);
+    Pharmacy(const int id, const std::string &pharmacy_name);
 
-    void shipDrugs(Database& db);
-    void billHospital(Database& db, double amount);
+    void shipDrugs(Database& db, int hospital_id);
+    void billHospital(Database& db, double amount, int hospital_id);
 };
 
 #endif

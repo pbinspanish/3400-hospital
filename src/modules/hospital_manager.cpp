@@ -9,7 +9,7 @@ void HospitalManager::addNewHospital(const int id, const std::string& location)
 
 void HospitalManager::addNewPharmacy(const int id, const std::string& name)
 {
-	Pharmacy new_pharmacy(name);
+	Pharmacy new_pharmacy(id, name);
 	
 	pharmacies.push_back(new_pharmacy);
 }
