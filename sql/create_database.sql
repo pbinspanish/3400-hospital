@@ -77,3 +77,12 @@ CREATE TABLE nurses_treating (
     FOREIGN KEY (patient_id) REFERENCES patients(id),
     PRIMARY KEY (nurse_id, patient_id)
 );
+
+CREATE TABLE IF NOT EXISTS prescription_requests (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    hospital_id INTEGER,
+    pharmacy_name TEXT,
+    drug_name TEXT,
+    status TEXT DEFAULT 'pending',
+    request_date DATETIME DEFAULT CURRENT_TIMESTAMP
+);
