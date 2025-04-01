@@ -23,7 +23,7 @@ void Doctor::primary(Database &db, Patient &patient) const
 
 void Doctor::attend(Database &db, Patient &patient)
 {
-    string sql = "INSERT INTO doctor_patient (doctorID, patientID) VALUES (" + to_string(D_id) + ", " + std::to_string(patient.getId()) + ");";
+    string sql = "INSERT INTO doctor_treating (doctorID, patientID) VALUES (" + to_string(D_id) + ", " + std::to_string(patient.getId()) + ");";
     db.executeSQL(sql);
 }
 
