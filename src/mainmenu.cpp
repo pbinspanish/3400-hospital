@@ -269,7 +269,8 @@ void adminMenu() {
         std::cout << "5. View All Doctors\n";
         std::cout << "6. View All Nurses\n";
         std::cout << "7. Request Prescription\n";
-        std::cout << "8. Back\n";
+        std::cout << "8. Bill Patient\n";
+        std::cout << "9. Back\n";
 
         choice = getIntInput("Enter your choice: ");
 
@@ -341,11 +342,18 @@ void adminMenu() {
             db.executeSQL(sql);
             std::cout << "Prescription request sent to " << pharmacyName << " for '" << drugName << "'.\n";
         } else if (choice == 8) {
+            int patientId = getIntInput("Enter patient ID to bill: ");
+            int daysStayed = getIntInput("Enter number of days stayed: ");
+            const double dailyRate = 500.0;
+            double totalBill = daysStayed * dailyRate;
+            std::cout << "Total bill for patient ID " << patientId
+                      << " (for " << daysStayed << " days): $" << totalBill << "\n";
+        } else if (choice == 9) {
             break;
         } else {
             std::cout << "Invalid choice.\n";
         }
-    } while (choice != 8);
+    } while (choice != 9);
 }
 void patientMenu() {
     // if (db.getPatientCount() == 0) {
