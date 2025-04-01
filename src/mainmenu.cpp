@@ -298,7 +298,7 @@ void showAllPatients() {
                   << " | Disease: " << row[4]
                   << " | Treatment: " << row[5] << "\n";
     }
-}
+}//Still needs to be fixed
 
 void showAllDoctors() {
     std::string sql = "SELECT id FROM doctors;";
