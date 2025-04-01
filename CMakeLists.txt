@@ -17,6 +17,7 @@ add_executable(hms
 	src/main.cpp
 	src/modules/database.cpp
 	src/modules/hospital.cpp
+	src/modules/hospital_manager.cpp
 	src/modules/patient.cpp
 	src/modules/doctor.cpp
 	src/modules/nurse.cpp

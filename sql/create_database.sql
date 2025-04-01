@@ -3,6 +3,8 @@ DROP TABLE IF EXISTS nurses;
 DROP TABLE IF EXISTS doctors_treating;
 DROP TABLE IF EXISTS patients;
 DROP TABLE IF EXISTS doctors;
+DROP TABLE IF EXISTS billing;
+DROP TABLE IF EXISTS shipments;
 DROP TABLE IF EXISTS pharmacies;
 DROP TABLE IF EXISTS hospitals;
 
@@ -14,6 +16,22 @@ CREATE TABLE hospitals (
 CREATE TABLE pharmacies (
     id INTEGER PRIMARY KEY,
     name VARCHAR
+);
+
+CREATE TABLE shipments (
+    id INTEGER PRIMARY KEY,
+    pharmacy_id INTEGER NOT NULL,
+    hospital_id INTEGER NOT NULL,
+    date DATE,
+    FOREIGN KEY (pharmacy_id) REFERENCES pharmacies(id),
+    FOREIGN KEY (hospital_id) REFERENCES hospitals(id)
+);
+
+CREATE TABLE billing (
+    id INTEGER PRIMARY KEY,
+    hospital_id INTEGER NOT NULL,
+    date DATE,
+    FOREIGN KEY (hospital_id) REFERENCES hospitals(id)
 );
 
 CREATE TABLE doctors (

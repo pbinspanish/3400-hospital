@@ -13,6 +13,19 @@ Hospital::Hospital(int id, const std::string& location) : id(id), location(locat
     std::cout << "Hospital " << location << " has been created with ID: " << id << std::endl;
 }
 
+// Menu
+void Hospital::hospitalMenu() {
+    int input;
+
+    do {
+        std::cout << "\n Welcome to " << location << " Hospital! \n";
+        std::cout << "1. Exit\n";
+        std::cout << "Enter: ";
+        std::cin >> input;
+
+        // Handle input
+    } while (input != 1);
+}
 
 
 // Patient Management
@@ -40,8 +53,14 @@ Patient Hospital::getPatient(int patient_id) {
 
 void Hospital::relocatePatient(Patient &patient, Hospital &new_hospital)
 {
+    // check that the new hospital has fewer than 20 patients
+    if (new_hospital.patients.size() >= 20) {
+        std::cout << "Cannot relocate patient " << patient.getFullName() << " to " << new_hospital.location << ": hospital is full." << std::endl;
+        return;
+    }
+
     // Add patient to the new hospital
-    new_hospital.addPatient(patient); // TODO: make sure we don't overflow the hospital
+    new_hospital.addPatient(patient);
 
     // Remove patient from the old hospital
     for (auto it = patients.begin(); it != patients.end(); ++it) {
@@ -87,7 +106,13 @@ Doctor Hospital::getDoctor(int doctor_id) {
     throw std::runtime_error("Doctor not found");
 }
 
-void Hospital::relocatedDoctor(const Doctor& doctor, const Hospital& hospital) {
+void Hospital::relocateDoctor(const Doctor& doctor, const Hospital& hospital) {
+    // make sure there are at least 3 doctors in the current hospital
+    if (doctors.size() <= 3) {
+        std::cout << "Cannot relocate doctor " << doctor.getId() << ": hospital has too few doctors." << std::endl;
+        return;
+    }
+
     // Add doctor to the new hospital
     doctors.push_back(doctor); // TODO: make sure we don't overflow the hospital
 
@@ -132,6 +157,12 @@ Nurse Hospital::getNurse(int nurse_id) {
 }
 
 void Hospital::relocateNurse(const Nurse& nurse, const Hospital& hospital) {
+    // make sure there are at least 5 nurses in the current hospital
+    if (nurses.size() <= 5) {
+        std::cout << "Cannot relocate nurse " << nurse.id << ": hospital has too few nurses." << std::endl;
+        return;
+    }
+
     // Add nurse to the new hospital
     nurses.push_back(nurse); // TODO: make sure we don't overflow the hospital
 

@@ -28,6 +28,9 @@ public:
     // Constructor
     Hospital(int id = 0, const std::string& location = "");
 
+    // Menu
+    void hospitalMenu();
+
     
     
     // Patient Management
@@ -46,7 +49,7 @@ public:
 
     Doctor getDoctor(int id);
 
-    void relocatedDoctor(const Doctor& doctor, const Hospital& hospital);
+    void relocateDoctor(const Doctor& doctor, const Hospital& hospital);
 
 
 

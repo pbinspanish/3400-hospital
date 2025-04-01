@@ -10,68 +10,82 @@
 
 #include "database.h"
 #include "hospital.h"
+#include "hospital_manager.h"
 
 int main ()
 {
     Database db;
     db.createDatabase();
 
-    // list of 5 hospitals
-    std::vector<Hospital> hospitals = {
-        Hospital(1, "Windsor"),
-        Hospital(2, "Essex"),
-        Hospital(3, "Tecumseh"),
-        Hospital(4, "LaSalle"),
-        Hospital(5, "Amherstburg")
-    };
+    HospitalManager manager;
+
+    // add 5 hospitals
+    manager.addNewHospital(1, "Windsor");
+    manager.addNewHospital(2, "Essex");
+    manager.addNewHospital(3, "Tecumseh");
+    manager.addNewHospital(4, "LaSalle");
+    manager.addNewHospital(5, "Amherstburg");
 
     // list of 20 pharmacies
-    // std::vector<Pharmacy> pharmacies = {
-    //     Pharmacy("Pharmacy A"),
-    //     Pharmacy("Pharmacy B"),
-    //     Pharmacy("Pharmacy C"),
-    //     Pharmacy("Pharmacy D"),
-    //     Pharmacy("Pharmacy E"),
-    //     Pharmacy("Pharmacy F"),
-    //     Pharmacy("Pharmacy G"),
-    //     Pharmacy("Pharmacy H"),
-    //     Pharmacy("Pharmacy I"),
-    //     Pharmacy("Pharmacy J"),
-    //     Pharmacy("Pharmacy K"),
-    //     Pharmacy("Pharmacy L"),
-    //     Pharmacy("Pharmacy M"),
-    //     Pharmacy("Pharmacy N"),
-    //     Pharmacy("Pharmacy O"),
-    //     Pharmacy("Pharmacy P"),
-    //     Pharmacy("Pharmacy Q"),
-    //     Pharmacy("Pharmacy R"),
-    //     Pharmacy("Pharmacy S"),
-    //     Pharmacy("Pharmacy T")
-    // };
+    manager.addNewPharmacy(1, "Pharmacy A");
+    manager.addNewPharmacy(2, "Pharmacy B");
+    manager.addNewPharmacy(3, "Pharmacy C");
+    manager.addNewPharmacy(4, "Pharmacy D");
+    manager.addNewPharmacy(5, "Pharmacy E");
+    manager.addNewPharmacy(6, "Pharmacy F");
+    manager.addNewPharmacy(7, "Pharmacy G");
+    manager.addNewPharmacy(8, "Pharmacy H");
+    manager.addNewPharmacy(9, "Pharmacy I");
+    manager.addNewPharmacy(10, "Pharmacy J");
+    manager.addNewPharmacy(11, "Pharmacy K");
+    manager.addNewPharmacy(12, "Pharmacy L");
+    manager.addNewPharmacy(13, "Pharmacy M");
+    manager.addNewPharmacy(14, "Pharmacy N");
+    manager.addNewPharmacy(15, "Pharmacy O");
+    manager.addNewPharmacy(16, "Pharmacy P");
+    manager.addNewPharmacy(17, "Pharmacy Q");
+    manager.addNewPharmacy(18, "Pharmacy R");
+    manager.addNewPharmacy(19, "Pharmacy S");
+    manager.addNewPharmacy(20, "Pharmacy T");
     
 
+    int input;
 
-    // create a patient and add it
-    Patient patient(1, "John", "Doe", "1234567890", "Flu", "Rest and hydration");
-    // test
-    hospitals[0].addPatient(patient);
+    do
+    {
+        std::cout << "\nWelcome to the Hospital Management System! \n";
+        std::cout << "1. Manage Hospitals\n";
+        std::cout << "2. Manage Patients\n";
+        std::cout << "3. Manage Doctors\n";
+        std::cout << "4. Manage Nurses\n";
+        std::cout << "5. Manage Pharmacies\n";
+        std::cout << "6. Exit\n";
+        std::cout << "Enter: ";
+        std::cin >> input;
 
-    hospitals[0].relocatePatient(patient, hospitals[1]);
-
-    // print out the names of all patients in hospital 1
-    std::cout << "Patients in hospital 1:" << std::endl;
-    for (const auto& p : hospitals[0].patients) {
-        std::cout << p.getFullName() << std::endl;
-    }
-    // print out the names of all patients in hospital 2
-    std::cout << "Patients in hospital 2:" << std::endl;
-    for (const auto& p : hospitals[1].patients) {
-        std::cout << p.getId() << std::endl;
-    }
-
-    Patient test = hospitals[1].getPatient(1);
-    std::cout << "Patient ID: " << test.getId() << std::endl;
-
-
-    remove("hms.db3");
+        switch (input)
+        {
+            case 1:
+                manager.hospitalManagementMenu();
+                break;
+            case 2:
+                // manage patients
+                break;
+            case 3:
+                // manage doctors
+                break;
+            case 4:
+                // manage nurses
+                break;
+            case 5:
+                // manage pharmacies
+                break;
+            case 6:
+                std::cout << "Exiting..." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid input" << std::endl;
+                break;
+        }
+    } while (input != 6);
 }
