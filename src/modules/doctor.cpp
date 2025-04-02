@@ -52,6 +52,20 @@ void Doctor::discharge(Database &db, Patient &patient) const {
     std::cout << "✅ Doctor has discharged Patient " << patient.getId() << "\n";
 }
 
+void Doctor::relocate(Database& db, int newHospitalId) {
+    std::string sql = "UPDATE doctors SET working_at = " + std::to_string(newHospitalId) + " WHERE id = " + std::to_string(D_id) + ";";
+    db.executeSQL(sql);
+
+    std::string confirmSql = "SELECT working_at FROM doctors WHERE id = " + std::to_string(D_id) + ";";
+    auto result = db.executeQuery(confirmSql);
+
+    if (!result.empty()) {
+        std::cout << "✅ Doctor " << getName() << " relocated to hospital ID " << result[0][0] << ".\n";
+    } else {
+        std::cout << "❌ Failed to confirm relocation.\n";
+    }
+}
+
 void Doctor::doctorMenu(Database &db)
 {
     int input;
