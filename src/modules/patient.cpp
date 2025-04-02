@@ -36,6 +36,21 @@ Patient Patient::getPatient(Database& db, int id) {
     }
 }
 
+void Patient::relocate(Database& db, int newHospitalId) {
+    std::string sql = "UPDATE patients SET admitted_to = " + std::to_string(newHospitalId) + " WHERE id = " + std::to_string(P_id) + ";";
+    db.executeSQL(sql);
+    std::cout << "✅ Patient " << getFullName() << " relocated to hospital ID " << newHospitalId << ".\n";
+}
+
+void Patient::bill(Database& db, int daysStayed, double dailyRate) {
+    double totalBill = daysStayed * dailyRate;
+    std::string sql = "INSERT INTO billing (hospital_id, date, amount) VALUES (" +
+                      std::to_string(hospital_id) + ", date('now'), " + std::to_string(totalBill) + ");";
+    db.executeSQL(sql);
+
+    std::cout << "✅ Patient " << getFullName() << " billed for $" << totalBill << " ("
+              << daysStayed << " days at $" << dailyRate << "/day).\n";
+}
 
 //#include "patient.h"
 //#include <iostream>

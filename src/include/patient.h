@@ -35,7 +35,8 @@ public:
     std::string getTreatment() const { return P_treatment; }
     time_t getAdmission() const { return P_admissionDate; }
     time_t getDischarge() const { return P_dischargeDate; }
-
+    void relocate(Database& db, int newHospitalId);
+    void bill(Database& db, int daysStayed, double dailyRate);
 };
 
 #endif

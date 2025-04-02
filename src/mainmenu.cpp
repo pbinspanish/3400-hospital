@@ -141,7 +141,7 @@ void doctorMenu() {
     } while (choice != 5);
 }
 void nurseMenu() {
-    // std::string nurseName;
+// std::string nurseName;
     // std::cout << "Enter nurse name: ";
     // std::cin.ignore();
     // std::getline(std::cin, nurseName);
@@ -168,7 +168,8 @@ void nurseMenu() {
         std::cout << "\n🧑‍⚕️ Nurse Menu:\n";
         std::cout << "1. Assign patient\n";
         std::cout << "2. View assigned patients\n";
-        std::cout << "3. Back\n";
+        std::cout << "3. Relocate to another hospital\n";
+        std::cout << "4. Back\n";
 
         choice = getIntInput("Enter your choice: ");
 
@@ -186,12 +187,19 @@ void nurseMenu() {
             case 2:
                 nurse.listPatients();
                 break;
-            case 3:
+            case 3: {
+                int newHospitalId = getIntInput("Enter the new hospital ID: ");
+                std::string updateSql = "UPDATE nurses SET working_at = " + std::to_string(newHospitalId) + " WHERE id = " + std::to_string(nurseId) + ";";
+                db.executeSQL(updateSql);
+                std::cout << "✅ Nurse relocated to hospital ID " << newHospitalId << ".\n";
+                break;
+            }
+            case 4:
                 break;
             default:
                 std::cout << "Invalid choice.\n";
         }
-    } while (choice != 3);
+    } while (choice != 4);
 }
 void pharmacyMenu() {
     std::string pharmacyName;
@@ -345,9 +353,8 @@ void adminMenu() {
             int patientId = getIntInput("Enter patient ID to bill: ");
             int daysStayed = getIntInput("Enter number of days stayed: ");
             const double dailyRate = 500.0;
-            double totalBill = daysStayed * dailyRate;
-            std::cout << "Total bill for patient ID " << patientId
-                      << " (for " << daysStayed << " days): $" << totalBill << "\n";
+            Patient patient = Patient::getPatient(db, patientId);
+            patient.bill(db, daysStayed, dailyRate);
         } else if (choice == 9) {
             break;
         } else {
@@ -356,22 +363,52 @@ void adminMenu() {
     } while (choice != 9);
 }
 void patientMenu() {
-    // if (db.getPatientCount() == 0) {
-    //     std::cout << "❌ No patients found in the database. Please create some patients first.\n";
-    //     return;
-    // }
+    int patientId;
 
-    int id = getIntInput("Enter patient ID to look up: ");
+    while (true) {
+        patientId = getIntInput("Enter patient ID: ");
+        
+        std::string sql = "SELECT id FROM patients WHERE id = " + std::to_string(patientId) + ";";
+        auto result = db.executeQuery(sql);
 
-    try {
-        Patient p = Patient::getPatient(db, id);
-        std::cout << "Patient: " << p.getFullName()
-                  << " | Disease: " << p.getDisease()
-                  << " | Treatment: " << p.getTreatment()
-                  << "\n";
-    } catch (...) {
-        std::cout << "❌ Patient not found.\n";
+        if (!result.empty()) {
+            break;
+        } else {
+            std::cout << "❌ Patient ID not found. Please try again.\n";
+        }
     }
+
+    Patient patient = Patient::getPatient(db, patientId);
+
+    int choice;
+    do {
+        std::cout << "\n👨‍⚕️ Patient Menu:\n";
+        std::cout << "1. View details\n";
+        std::cout << "2. Relocate to another hospital\n";
+        std::cout << "3. Back\n";
+
+        choice = getIntInput("Enter your choice: ");
+
+        switch (choice) {
+            case 1: {
+                std::cout << "Patient Details:\n";
+                std::cout << "Name: " << patient.getFullName() << "\n";
+                std::cout << "Phone: " << patient.getPhone() << "\n";
+                std::cout << "Disease: " << patient.getDisease() << "\n";
+                std::cout << "Treatment: " << patient.getTreatment() << "\n";
+                break;
+            }
+            case 2: {
+                int newHospitalId = getIntInput("Enter the new hospital ID: ");
+                patient.relocate(db, newHospitalId);
+                break;
+            }
+            case 3:
+                break;
+            default:
+                std::cout << "Invalid choice.\n";
+        }
+    } while (choice != 3);
 }
 
 
