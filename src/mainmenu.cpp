@@ -74,8 +74,8 @@ void doctorMenu() {
         doctorId = getIntInput("Enter doctor ID: ");
         
         std::string sql = "SELECT id FROM doctors WHERE id = " + std::to_string(doctorId) + ";";
-        auto result = db.executeQuery(sql);  // run the query right here
-    
+        auto result = db.executeQuery(sql);
+
         if (!result.empty()) {
             break; // ID found in database
         } else {
@@ -90,7 +90,8 @@ void doctorMenu() {
         std::cout << "2. Discharge a patient\n";
         std::cout << "3. Become primary doctor\n";
         std::cout << "4. Request drug delivery\n";
-        std::cout << "5. Back\n";
+        std::cout << "5. Relocate to another hospital\n";
+        std::cout << "6. Back\n";
 
         choice = getIntInput("Enter your choice: ");
 
@@ -133,12 +134,17 @@ void doctorMenu() {
                 doctor.requestOrder(db, prescription);
                 break;
             }
-            case 5:
+            case 5: {
+                int newHospitalId = getIntInput("Enter the new hospital ID: ");
+                doctor.relocate(db, newHospitalId);
+                break;
+            }
+            case 6:
                 break;
             default:
                 std::cout << "Invalid choice.\n";
         }
-    } while (choice != 5);
+    } while (choice != 6);
 }
 void nurseMenu() {
 // std::string nurseName;
