@@ -31,6 +31,8 @@ public:
     void discharge(Database& db, Patient& patient) const;
 
     void doctorMenu(Database& db);
+
+    void relocate(Database& db, int newHospitalId);
 };
 
 #endif
