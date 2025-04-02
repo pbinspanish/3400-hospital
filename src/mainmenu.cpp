@@ -156,7 +156,7 @@ void nurseMenu() {
     int nurseId;
 
     while (true) {
-        nurseId = getIntInput("Enter nurse ID (1–5): ");
+        nurseId = getIntInput("Enter nurse ID: ");
         
         std::string sql = "SELECT id FROM nurses WHERE id = " + std::to_string(nurseId) + ";";
         auto result = db.executeQuery(sql);
