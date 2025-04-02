@@ -17,4 +17,5 @@ Then
 ./hospitalSystem
 
 Presentation Slides:
-Coming Soon!
+
+(https://www.canva.com/design/DAGjCmUITMA/quZPshsPzRhmDX8a_TUUfg/edit?utm_content=DAGjCmUITMA&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
