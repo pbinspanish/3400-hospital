@@ -7,11 +7,19 @@
 | Faria Islam   | Doctor & Patient Code         |
 
 To run in codespace:
-g++ src/mainmenu.cpp src/modules/*.cpp SQLiteCpp/src/*.cpp -o hospitalSystem -I SQLiteCpp/include -I src/include -lsqlite3
+```
+g++ src/mainmenu.cpp src/modules/\*.cpp SQLiteCpp/src/\*.cpp -o hospitalSystem -I SQLiteCpp/include -I src/include -lsqlite3
+```
 
-Then 
+If that doesnt work, try:
+```
+g++ src/mainmenu.cpp src/modules/\*.cpp SQLiteCpp/src/\*.cpp -o hospitalSystem -I SQLiteCpp/include -I src/include -lsqlite3
+```
+
+Then :
+```
 ./hospitalSystem
+```
 
 Presentation Slides:
-
-(https://www.canva.com/design/DAGjCmUITMA/quZPshsPzRhmDX8a_TUUfg/edit?utm_content=DAGjCmUITMA&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+https://www.canva.com/design/DAGjCmUITMA/quZPshsPzRhmDX8a_TUUfg/edit?utm_content=DAGjCmUITMA&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
